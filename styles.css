@@ -1,0 +1,8 @@
+* {
+    font-family: "Inter";
+}
+.active {
+    background: #15803D;
+    padding: 2px;
+    color: white;
+}
