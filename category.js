@@ -1,74 +1,57 @@
-//Load Categories 
+
 const loadCategories = () => {
     fetch('https://openapi.programming-hero.com/api/categories')
         .then((res) => res.json())
         .then((categories) => displayCategories(categories.categories));
 }
-// Display Categories Btns
+
 const displayCategories = (categoriesBtns) => {
-    const categorycontainer = document.getElementById('categoryContainer');
+    const categoryContainer = document.getElementById('categoryContainer');
+
     categoriesBtns.forEach(btn => {
-        const btndiv = document.createElement('div');
-        btndiv.innerHTML = `
-                        <button id="category-btn-${btn.id}" onclick="loadCategoriesById(${btn.id})" class="activeClass  w-full rounded-lg py-1 text-black text-nowrap">${btn.category_name}
-                        </button>`;
-        categorycontainer.appendChild(btndiv);
+
+        const button = document.createElement('button');
+
+        button.className = `category-btn w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-green-50 text-[#15803D] border border-green-100 hover:bg-[#15803D] hover:text-white mb-2`;
+
+        button.innerText = btn.category_name;
+
+
+        button.id = `category-btn-${btn.id}`;
+
+
+        button.onclick = () => {
+            loadCategoriesById(btn.id);
+            handleActiveState(button.id);
+        };
+
+        categoryContainer.appendChild(button);
     });
 };
-// Load Categories By Btn
-const loadCategoriesById = (plants) => {
-    fetch(`https://openapi.programming-hero.com/api/category/${plants}`)
+
+const loadCategoriesById = (categoryId) => {
+    fetch(`https://openapi.programming-hero.com/api/category/${categoryId}`)
         .then((res) => res.json())
-        .then((category) => {
-            displayCategoriesById(category.plants);
-        });
+        .then((data) => {
+            displayAllPlants(data.plants || data);
+        })
+        .catch(err => console.error(err));
 };
-// Display Plants by Categories
-const displayCategoriesById = (plants) => {
-    const cardContainer = document.getElementById('card-container');
-    cardContainer.innerHTML = '';
-    for (const plant of plants) {
-        const card = document.createElement("div");
-        card.innerHTML = `
-            <div class=" grid grid-cols-1 md:grid md:grid-cols-3 items-stretch gap-1 p-1">
-        <div class="card bg-base-100 w-140px md:min-w-[280px] shadow-sm">
-            <figure>
-                <div class="w-full h-[180px] md:w-[310px] md:h-[180px]">
-                    <img class="w-full h-full object-cover" src="${plant.image}" alt="AllPlants">
-                </div>
-            </figure>
-            <div class="card space-y-2 p-2">
-                <h2 onclick="loadPlantDetails(${plant.id})" class=" w-fit cursor-pointer text-sm card-title"> ${plant.name}</h2>
-                <p class="truncate text-xs"> ${plant.description} </p>
-                <div class="card-action flex justify-between items-center ">
-                    <div class="badge text-sm text-green-700 rounded-lg text-nowrap bg-[#DCFCE7]"> ${plant.category}</div>
-                    <div class="font-bold text-xs">
-                        <p>৳<span>${plant.price}</span></p>
-                    </div>
-                </div>
-            </div>
-            <button 
-                class="add-to-cart-btn bg-[#15803D] text-white p-2 rounded-full w-full mt-auto"
-                data-id="${plant.id}"
-                data-name="${plant.name}"
-                data-price="${plant.price}"
-                data-image="${plant.image}">
-                Add To Cart
-            </button>
-        </div>
-    </div>`;
-        cardContainer.append(card);
-    }
-}
-// Active Btn Section
-const cardContainer = document.getElementById('categoryContainer')
-cardContainer.addEventListener('click', (e) => {
-    const allBtns = document.querySelectorAll('.activeClass')
+
+const handleActiveState = (activeId) => {
+
+    const allBtns = document.querySelectorAll('.category-btn');
+
     allBtns.forEach(btn => {
-        btn.classList.remove('active')
+        btn.classList.remove('bg-[#15803D]', 'text-white');
+        btn.classList.add('bg-green-50', 'text-[#15803D]');
     });
-    if (e.target.localName === 'button') {
-        e.target.classList.add('active')
+
+    const activeBtn = document.getElementById(activeId);
+    if (activeBtn) {
+        activeBtn.classList.remove('bg-green-50', 'text-[#15803D]');
+        activeBtn.classList.add('bg-[#15803D]', 'text-white');
     }
-});
+};
+
 loadCategories();
