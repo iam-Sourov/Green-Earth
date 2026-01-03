@@ -1,4 +1,4 @@
-// Load Data From Api For Cart
+
 const loadCart = () => {
     fetch('https://openapi.programming-hero.com/api/plants')
         .then((res) => res.json())
@@ -10,30 +10,43 @@ const displayPlants = (plants) => {
     cardContainer.innerHTML = '';
     plants.forEach(plant => {
         const card = document.createElement("div");
-        card.innerHTML = `<div class=" grid grid-cols-1 md:grid md:grid-cols-3 items-stretch gap-1 p-1">
-    <div class="card bg-base-100 w-140px md:min-w-[280px] shadow-sm">
-        <figure>
-            <div class="w-full h-[180px] md:w-[310px] md:h-[180px]">
-                <img class="w-full h-full object-cover" src="${plant.image}" alt="AllPlants"> 
-            </div>
-         </figure>
-        <div class="card space-y-2 p-2">
-            <h2 onclick="loadPlantDetails(${plant.id})" class=" w-fit cursor-pointer text-sm card-title"">${plant.name}</h2>
-            <p class="w-full text-xs truncate"> ${plant.description} </p>
-            <div class="card-action flex justify-between items-center ">
-                <div class="badge text-sm text-green-700 rounded-lg text-nowrap bg-[#DCFCE7]"> ${plant.category}</div>
-                <div class="font-bold text-xs">
-                    <p>৳<span>${plant.price}</span></p>
-                </div>
-            </div>
+        card.innerHTML = `<div class="card bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-xl overflow-hidden h-full flex flex-col group">
+    
+    <figure class="relative h-48 w-full overflow-hidden cursor-pointer bg-gray-50" onclick="loadPlantDetails(${plant.id})">
+        <img 
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+            src="${plant.image}" 
+            alt="${plant.name}" 
+        />
+    </figure>
+
+    <div class="p-4 flex flex-col flex-grow space-y-3">
+        
+        <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">
+                ${plant.category}
+            </span>
+            <span class="text-lg font-bold text-gray-900">৳${plant.price}</span>
         </div>
-         <button 
-                class="add-to-cart-btn bg-[#15803D] text-white p-2 rounded-full w-full mt-auto"
-                data-id="${plant.id}"
-                data-name="${plant.name}"
-                data-price="${plant.price}"
-                data-image="${plant.image}">
-                Add To Cart
+
+        <h2 onclick="loadPlantDetails(${plant.id})" 
+            class="text-lg font-serif font-bold text-gray-800 cursor-pointer hover:text-emerald-700 transition line-clamp-1">
+            ${plant.name}
+        </h2>
+
+        <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed">
+            ${plant.description}
+        </p>
+
+        <div class="flex-grow"></div>
+
+        <button 
+            class="add-to-cart-btn btn btn-sm w-full bg-[#15803D] hover:bg-[#14532D] text-white border-none rounded-lg shadow-sm flex items-center gap-2"
+            data-id="${plant.id}"
+            data-name="${plant.name}"
+            data-price="${plant.price}"
+            data-image="${plant.image}">
+            <i class="fa-solid fa-cart-plus"></i> Add To Cart
         </button>
     </div>
 </div>`;
